@@ -2,7 +2,7 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import gradio as gr
 
 tokenizer = AutoTokenizer.from_pretrained("merve/chatgpt-prompts-bart-long")
-model = AutoModelForSeq2SeqLM.from_pretrained("merve/chatgpt-prompts-bart-long")
+model = AutoModelForSeq2SeqLM.from_pretrained("merve/chatgpt-prompts-bart-long", from_tf=True)
 
 def generate(prompt):
 
