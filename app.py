@@ -15,4 +15,4 @@ input_component = gr.Textbox(label = "Input a persona, e.g. photographer", value
 output_component = gr.Textbox(label = "Prompt")
 examples = [["photographer"], ["developer"]]
 description = "This app generates ChatGPT prompts, it's based on a BART model trained on [this dataset](https://huggingface.co/datasets/fka/awesome-chatgpt-prompts). Simply enter a persona that you want the prompt to be generated based on."
-gr.Interface(generate, inputs = input_component, outputs=output_component, title = "ChatGPT Prompt Generator", description=description).launch()
+gr.Interface(generate, inputs = input_component, outputs=output_component, examples=examples, title = "ChatGPT Prompt Generator", description=description).launch()
