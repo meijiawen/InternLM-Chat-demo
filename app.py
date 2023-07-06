@@ -1,18 +1,27 @@
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+# from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModel
 import gradio as gr
 
-tokenizer = AutoTokenizer.from_pretrained("merve/chatgpt-prompts-bart-long")
-model = AutoModelForSeq2SeqLM.from_pretrained("merve/chatgpt-prompts-bart-long", from_tf=True)
+tokenizer = AutoTokenizer.from_pretrained("internlm/internlm-chat-7b",
+                                          trust_remote_code=True)
+model = AutoModel.from_pretrained("internlm/internlm-chat-7b",
+                                  trust_remote_code=True,
+                                  device='cuda')
+
 
 def generate(prompt):
+    model = model.eval()
+    response, history = model.chat(tokenizer, prompt, history=history)
+    return response
 
-    batch = tokenizer(prompt, return_tensors="pt")
-    generated_ids = model.generate(batch["input_ids"], max_new_tokens=150)
-    output = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
-    return output[0]
 
-input_component = gr.Textbox(label = "Input a persona, e.g. photographer", value = "photographer")
-output_component = gr.Textbox(label = "Prompt")
-examples = [["photographer"], ["developer"]]
-description = "This app generates ChatGPT prompts, it's based on a BART model trained on [this dataset](https://huggingface.co/datasets/fka/awesome-chatgpt-prompts). 📓 Simply enter a persona that you want the prompt to be generated based on. 🧙🏻🧑🏻‍🚀🧑🏻‍🎨🧑🏻‍🔬🧑🏻‍💻🧑🏼‍🏫🧑🏽‍🌾"
-gr.Interface(generate, inputs = input_component, outputs=output_component, examples=examples, title = "👨🏻‍🎤 ChatGPT Prompt Generator 👨🏻‍🎤", description=description).launch()
+input_component = gr.Textbox(label="Prompt")
+output_component = gr.Textbox(label="回答")
+examples = [["今天天气如何？"], ["你是谁？"]]
+description = "浦语在线体验1.0"
+gr.Interface(generate,
+             inputs=input_component,
+             outputs=output_component,
+             examples=examples,
+             title="InternLM Chat demo v1.0",
+             description=description).launch()

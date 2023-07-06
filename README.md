@@ -1,6 +1,6 @@
 ---
-title: ChatGPT Prompt Generator
-emoji: 👨🏻‍🎤
+title: InternLM Chat demo
+emoji: 
 colorFrom: purple
 colorTo: pink
 sdk: gradio
@@ -10,4 +10,4 @@ pinned: false
 license: apache-2.0
 ---
 
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+Check out the configuration reference at <https://huggingface.co/docs/hub/spaces-config-reference>
