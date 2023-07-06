@@ -16,7 +16,7 @@ def generate(prompt):
 
 
 input_component = gr.Textbox(label="Prompt")
-output_component = gr.Textbox(label="回答")
+output_component = gr.Textbox(label="output")
 examples = [["今天天气如何？"], ["你是谁？"]]
 description = "浦语在线体验1.0"
 gr.Interface(generate,
