@@ -3,18 +3,23 @@ from transformers import AutoTokenizer, AutoModel
 import gradio as gr
 
 # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-tokenizer = AutoTokenizer.from_pretrained("internlm/internlm-chat-7b",
+# tokenizer = AutoTokenizer.from_pretrained("internlm/internlm-chat-7b",
+#                                           trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b",
                                           trust_remote_code=True)
 # model = AutoModel.from_pretrained("internlm/internlm-chat-7b",
 #                                   trust_remote_code=True,
 #                                   device='cuda')
-model = AutoModel.from_pretrained("internlm/internlm-chat-7b",
-                                  trust_remote_code=True)
+# model = AutoModel.from_pretrained("internlm/internlm-chat-7b",
+#                                   trust_remote_code=True,
+#                                   device='cuda')
+model = AutoModel.from_pretrained("THUDM/chatglm-6b",
+                                  trust_remote_code=True).half().cuda()
 
 
 def generate(prompt):
     model = model.eval()
-    response, history = model.chat(tokenizer, prompt, history=history)
+    response, history = model(tokenizer, prompt, history=history)
     return response
 
 
