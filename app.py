@@ -60,14 +60,14 @@ with gr.Blocks() as demo:
 
     inputs.submit(
         predict,
-        [inputs, chatbot],
+        [inputs, top_p, temperature, chatbot],
         [chatbot],
     )
     inputs.submit(reset_textbox, [], [inputs])
 
     button.click(
         predict,
-        [inputs, chatbot],
+        [inputs, top_p, temperature, chatbot],
         [chatbot],
     )
     button.click(reset_textbox, [], [inputs])
