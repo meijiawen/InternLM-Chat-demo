@@ -16,17 +16,17 @@ model = AutoModelForCausalLM.from_pretrained("internlm/internlm-chat-7b",
 # model = AutoModel.from_pretrained("THUDM/chatglm-6b",
 #                                   trust_remote_code=True).half().cuda()
 
-# def predict(input, history=None):
-#     if history is None:
-#         history = []
-#     response, history = model.stream_chat(tokenizer, input, history)
-#     return history, history
+def predict(input, history=None):
+    if history is None:
+        history = []
+    response, history = model.stream_chat(tokenizer, input, history)
+    return history, history
 
 
-def predict_stream(input, history=[]):
-    history = list(map(tuple, history))
-    for response, updates in model.stream_chat(tokenizer, input, history):
-        yield updates
+# def predict_stream(input, history=[]):
+#     history = list(map(tuple, history))
+#     for response, updates in model.stream_chat(tokenizer, input, history):
+#         yield updates
 
 
 def reset_textbox():
@@ -46,6 +46,7 @@ with gr.Blocks() as demo:
                 placeholder="请输入prompt并按回车发送").style(container=False)
         with gr.Column(scale=1):
             button = gr.Button("提交")
+        with gr.Column(scale=1):
             clear = gr.Button("清除")
 
     inputs.submit(
