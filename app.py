@@ -16,12 +16,21 @@ model = AutoModelForCausalLM.from_pretrained("internlm/internlm-chat-7b",
 # model = AutoModel.from_pretrained("THUDM/chatglm-6b",
 #                                   trust_remote_code=True).half().cuda()
 
+# def predict(input, history=None):
+#     if history is None:
+#         history = []
+#     response, history = model.stream_chat(tokenizer, input, history)
+#     return history, history
 
-def predict(input, history=None):
-    if history is None:
-        history = []
-    response, history = model.stream_chat(tokenizer, input, history)
-    return history, history
+
+def predict_stream(input, history=[]):
+    history = list(map(tuple, history))
+    for response, updates in model.stream_chat(tokenizer, input, history):
+        yield updates
+
+
+def reset_textbox():
+    return gr.update(value="")
 
 
 with gr.Blocks() as demo:
@@ -32,13 +41,32 @@ with gr.Blocks() as demo:
     chatbot = gr.Chatbot([], elem_id="chatbot").style(height=600)
     with gr.Row():
         with gr.Column(scale=4):
-            txt = gr.Textbox(
+            inputs = gr.Textbox(
                 show_label=False,
                 placeholder="请输入prompt并按回车发送").style(container=False)
         with gr.Column(scale=1):
             button = gr.Button("提交")
-    txt.submit(predict, [txt, state], [chatbot, state])
-    button.click(predict, [txt, state], [chatbot, state])
+            clear = gr.Button("清除")
+
+    inputs.submit(
+        predict_stream,
+        [inputs, chatbot],
+        [chatbot],
+    )
+    inputs.submit(reset_textbox, [], [inputs])
+
+    button.click(
+        predict_stream,
+        [inputs, chatbot],
+        [chatbot],
+    )
+    button.click(reset_textbox, [], [inputs])
+
+    clear.click(lambda: None, None, chatbot, queue=False)
+
+    # txt.submit(predict, [txt, state], [chatbot, state])
+    # button.click(predict, [txt, state], [chatbot, state])
+
 demo.queue().launch()
 
 # input_component = gr.Textbox(label="Prompt")
