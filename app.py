@@ -20,7 +20,7 @@ model = AutoModelForCausalLM.from_pretrained("internlm/internlm-chat-7b",
 def predict(input, history=None):
     if history is None:
         history = []
-    response, history = model.chat(tokenizer, input, history)
+    response, history = model.stream_chat(tokenizer, input, history)
     return history, history
 
 
