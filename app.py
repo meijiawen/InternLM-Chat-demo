@@ -25,8 +25,8 @@ def predict(input, history=None):
 
 
 with gr.Blocks() as demo:
-    gr.Markdown('''## internlm-chat-7b -  demo
-    demo of the [internlm-chat-7b](https://github.com/InternLM/InternLM) model
+    gr.Markdown(
+        '''demo of the [internlm-chat-7b](https://github.com/InternLM/InternLM) model
     ''')
     state = gr.State([])
     chatbot = gr.Chatbot([], elem_id="chatbot").style(height=600)
