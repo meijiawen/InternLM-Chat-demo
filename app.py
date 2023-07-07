@@ -16,17 +16,24 @@ model = AutoModelForCausalLM.from_pretrained("internlm/internlm-chat-7b",
 # model = AutoModel.from_pretrained("THUDM/chatglm-6b",
 #                                   trust_remote_code=True).half().cuda()
 
-def predict(input, history=None):
-    if history is None:
-        history = []
-    response, history = model.stream_chat(tokenizer, input, history)
-    return history, history
+# def predict(input, history=None):
+#     if history is None:
+#         history = []
+#     response, history = model.stream_chat(tokenizer, input, history)
+#     return history, history
+
+top_p = 1
+temperature = 1
 
 
-# def predict_stream(input, history=[]):
-#     history = list(map(tuple, history))
-#     for response, updates in model.stream_chat(tokenizer, input, history):
-#         yield updates
+def predict_stream(input, top_p, temperature, history=[]):
+    history = list(map(tuple, history))
+    for response, updates in model.stream_chat(tokenizer,
+                                               input,
+                                               history,
+                                               top_p=top_p,
+                                               temperature=temperature):
+        yield updates
 
 
 def reset_textbox():
