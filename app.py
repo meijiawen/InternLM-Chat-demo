@@ -32,11 +32,11 @@ with gr.Blocks() as demo:
     chatbot = gr.Chatbot([], elem_id="chatbot").style(height=600)
     with gr.Row():
         with gr.Column(scale=4):
-            txt = gr.Textbox(show_label=False,
-                             placeholder="Enter text and press enter").style(
-                                 container=False)
+            txt = gr.Textbox(
+                show_label=False,
+                placeholder="请输入prompt并按回车发送").style(container=False)
         with gr.Column(scale=1):
-            button = gr.Button("Generate")
+            button = gr.Button("提交")
     txt.submit(predict, [txt, state], [chatbot, state])
     button.click(predict, [txt, state], [chatbot, state])
 demo.queue().launch()
