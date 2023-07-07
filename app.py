@@ -11,17 +11,34 @@ tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b",
 #                                   trust_remote_code=True,
 #                                   device='cuda')
 # model = AutoModel.from_pretrained("internlm/internlm-chat-7b",
-#                                   trust_remote_code=True,
-#                                   device='cuda')
+#                                   trust_remote_code=True)
 model = AutoModel.from_pretrained("THUDM/chatglm-6b",
                                   trust_remote_code=True).half().cuda()
 
 
-def generate(prompt):
-    model = model.eval()
-    response, history = model(tokenizer, prompt, history=history)
-    return response
+def predict(input, history=None):
+    if history is None:
+        history = []
+    response, history = model.chat(tokenizer, input, history)
+    return history, history
 
+
+with gr.Blocks() as demo:
+    gr.Markdown('''## internlm-chat-7b -  demo
+    demo of the [internlm-chat-7b](https://github.com/InternLM/InternLM) model
+    ''')
+    state = gr.State([])
+    chatbot = gr.Chatbot([], elem_id="chatbot").style(height=600)
+    with gr.Row():
+        with gr.Column(scale=4):
+            txt = gr.Textbox(show_label=False,
+                             placeholder="Enter text and press enter").style(
+                                 container=False)
+        with gr.Column(scale=1):
+            button = gr.Button("Generate")
+    txt.submit(predict, [txt, state], [chatbot, state])
+    button.click(predict, [txt, state], [chatbot, state])
+demo.queue().launch()
 
 input_component = gr.Textbox(label="Prompt")
 output_component = gr.Textbox(label="output")
