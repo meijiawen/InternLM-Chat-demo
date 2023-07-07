@@ -16,11 +16,13 @@ model = AutoModelForCausalLM.from_pretrained("internlm/internlm-chat-7b",
 # model = AutoModel.from_pretrained("THUDM/chatglm-6b",
 #                                   trust_remote_code=True).half().cuda()
 
-# def predict(input, history=None):
-#     if history is None:
-#         history = []
-#     response, history = model.stream_chat(tokenizer, input, history)
-#     return history, history
+
+def predict(input, history=None):
+    if history is None:
+        history = []
+    response, history = model.stream_chat(tokenizer, input, history)
+    return history, history
+
 
 top_p = 1
 temperature = 1
@@ -57,14 +59,14 @@ with gr.Blocks() as demo:
             clear = gr.Button("清除")
 
     inputs.submit(
-        predict_stream,
+        predict,
         [inputs, chatbot],
         [chatbot],
     )
     inputs.submit(reset_textbox, [], [inputs])
 
     button.click(
-        predict_stream,
+        predict,
         [inputs, chatbot],
         [chatbot],
     )
